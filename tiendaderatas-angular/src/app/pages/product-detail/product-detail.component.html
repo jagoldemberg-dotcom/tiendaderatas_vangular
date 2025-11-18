@@ -1,0 +1,23 @@
+<main class="container py-4" *ngIf="producto; else noEncontrado">
+  <div class="row">
+    <div class="col-md-5">
+      <img [src]="producto?.imagenUrl" class="img-fluid rounded mb-3" [alt]="producto?.nombre">
+    </div>
+    <div class="col-md-7">
+      <h1 class="h4 mb-3">{{ producto?.nombre }}</h1>
+      <p class="mb-3">{{ producto?.descripcion }}</p>
+      <p class="h5 mb-4">{{ producto?.precio | currency:'CLP':'symbol-narrow' }}</p>
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary" routerLink="/cart">Agregar al carrito (simulado)</button>
+        <button class="btn btn-outline-secondary" (click)="volverAlListado()">Volver a productos</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<ng-template #noEncontrado>
+  <main class="container py-4">
+    <p>Producto no encontrado.</p>
+    <button class="btn btn-outline-secondary" (click)="volverAlListado()">Volver a productos</button>
+  </main>
+</ng-template>

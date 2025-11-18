@@ -1,0 +1,14 @@
+<main class="container py-4">
+  <h1 class="h4 mb-3">Mi perfil</h1>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <p class="mb-1"><strong>Nombre:</strong> {{ nombre }}</p>
+      <p class="mb-1"><strong>Correo:</strong> {{ email }}</p>
+      <p class="mb-0 text-muted">Datos simulados solo para fines de la evaluación.</p>
+    </div>
+  </div>
+
+  <a routerLink="/orders" class="btn btn-outline-primary me-2">Ver mis compras</a>
+  <a routerLink="/login" class="btn btn-outline-secondary">Cerrar sesión (simulado)</a>
+</main>
