@@ -27,4 +27,9 @@ export class ProductDetailComponent implements OnInit {
   volverAlListado(): void {
     this.router.navigate(['/products']);
   }
+
+  agregarAlCarrito(producto: any): void {
+  // TODO: aquí podrías usar un servicio de carrito si lo tienes
+  console.log('Agregar al carrito (simulado)', producto);
+}
 }
