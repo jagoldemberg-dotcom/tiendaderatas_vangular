@@ -7,18 +7,41 @@
           <p class="text-muted">
             Ingresa tu correo y te enviaremos un enlace de recuperación (simulado).
           </p>
-          <form (ngSubmit)="onSubmit()" #forgotForm="ngForm" novalidate>
+
+          <form
+            [formGroup]="forgotForm"
+            (ngSubmit)="onSubmit()"
+            novalidate
+          >
             <div class="mb-3">
               <label class="form-label" for="email">Correo</label>
-              <input id="email" name="email" type="email" class="form-control"
-                     [(ngModel)]="email" required email>
-              <div class="invalid-feedback d-block" *ngIf="forgotForm.submitted && !email">
+              <input
+                id="email"
+                type="email"
+                class="form-control"
+                formControlName="email"
+                [class.is-invalid]="campoInvalido('email')"
+              />
+              <div class="invalid-feedback d-block" *ngIf="campoInvalido('email')">
                 Ingresa un correo válido.
               </div>
             </div>
-            <button class="btn btn-primary w-100" type="submit">Enviar enlace</button>
+
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-primary" type="submit">
+                Enviar enlace
+              </button>
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="onReset()"
+              >
+                Limpiar
+              </button>
+            </div>
           </form>
-          <div *ngIf="enviado" class="alert alert-info mt-3">
+
+          <div *ngIf="enviado && forgotForm.valid" class="alert alert-info mt-3">
             Se envió un enlace (simulado) a tu correo.
           </div>
         </div>
