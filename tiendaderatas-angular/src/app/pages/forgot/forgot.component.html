@@ -5,7 +5,7 @@
         <div class="card-body">
           <h1 class="h4 mb-3">Recuperar contraseña</h1>
           <p class="text-muted">
-            Ingresa tu correo y te enviaremos un enlace de recuperación (simulado).
+            Ingresa tu correo y te entregaremos una contraseña temporal para que puedas volver a iniciar sesión.
           </p>
 
           <form
@@ -27,9 +27,9 @@
               </div>
             </div>
 
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between align-items-center">
               <button class="btn btn-primary" type="submit">
-                Enviar enlace
+                Recuperar contraseña
               </button>
               <button
                 class="btn btn-outline-secondary"
@@ -41,8 +41,12 @@
             </div>
           </form>
 
-          <div *ngIf="enviado && forgotForm.valid" class="alert alert-info mt-3">
-            Se envió un enlace (simulado) a tu correo.
+          <div *ngIf="mensaje" class="alert alert-info mt-3">
+            {{ mensaje }}
+            <ng-container *ngIf="passwordTemporal">
+              <br />
+              <strong>Contraseña temporal:</strong> {{ passwordTemporal }}
+            </ng-container>
           </div>
         </div>
       </div>

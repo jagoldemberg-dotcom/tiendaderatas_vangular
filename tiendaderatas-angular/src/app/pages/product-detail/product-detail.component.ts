@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../models/product.model';
 import { ProductService } from '../../services/product.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -13,12 +14,13 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
-    const id = idParam ? Number(idParam) : NaN;
+    const id = idParam ? +idParam : NaN;
     if (!isNaN(id)) {
       this.producto = this.productService.getById(id);
     }
@@ -28,8 +30,10 @@ export class ProductDetailComponent implements OnInit {
     this.router.navigate(['/products']);
   }
 
-  agregarAlCarrito(producto: any): void {
-  // TODO: aquí podrías usar un servicio de carrito si lo tienes
-  console.log('Agregar al carrito (simulado)', producto);
-}
+  agregarAlCarrito(producto?: Product): void {
+    if (!producto) {
+      return;
+    }
+    this.cartService.add(producto);
+  }
 }

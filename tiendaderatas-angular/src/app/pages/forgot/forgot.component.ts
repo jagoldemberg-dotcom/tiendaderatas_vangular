@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-forgot',
@@ -9,8 +10,13 @@ export class ForgotComponent implements OnInit {
 
   forgotForm!: FormGroup;
   enviado = false;
+  mensaje = '';
+  passwordTemporal?: string;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.forgotForm = this.fb.group({
@@ -39,11 +45,17 @@ export class ForgotComponent implements OnInit {
       return;
     }
 
-    console.log('Recuperación simulada:', this.forgotForm.value);
+    const { email } = this.forgotForm.value;
+    const resultado = this.authService.recuperarPassword(email);
+
+    this.mensaje = resultado.mensaje;
+    this.passwordTemporal = resultado.passwordTemporal;
   }
 
   onReset(): void {
     this.enviado = false;
+    this.mensaje = '';
+    this.passwordTemporal = undefined;
     this.forgotForm.reset();
   }
 }

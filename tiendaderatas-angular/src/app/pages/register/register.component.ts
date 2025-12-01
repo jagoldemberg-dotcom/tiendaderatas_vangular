@@ -6,6 +6,8 @@ import {
   AbstractControl,
   ValidationErrors
 } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -15,8 +17,14 @@ export class RegisterComponent implements OnInit {
 
   registerForm!: FormGroup;
   enviado = false;
+  mensajeExito = '';
+  mensajeError = '';
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.registerForm = this.fb.group(
@@ -30,12 +38,10 @@ export class RegisterComponent implements OnInit {
             Validators.required,
             Validators.minLength(6),
             Validators.maxLength(18),
-            // al menos una mayúscula y un número
             Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9]).*$/)
           ]
         ],
         password2: ['', Validators.required],
-        // Dirección de despacho OPCIONAL
         direccion: ['']
       },
       {
@@ -44,7 +50,6 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-  // Validador de contraseñas (las dos deben ser iguales)
   passwordsIgualesValidator(group: AbstractControl): ValidationErrors | null {
     const pass = group.get('password')?.value;
     const pass2 = group.get('password2')?.value;
@@ -77,12 +82,32 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    // Aquí iría la lógica real de registro (service, HTTP, etc.)
-    console.log('Usuario registrado (simulado):', this.registerForm.value);
+    const { nombre, email, edad, password, direccion } = this.registerForm.value;
+
+    const resultado = this.authService.registrar({
+      nombre,
+      email,
+      edad,
+      password,
+      direccion
+    });
+
+    if (!resultado.exito) {
+      this.mensajeExito = '';
+      this.mensajeError = resultado.mensaje;
+      return;
+    }
+
+    this.mensajeError = '';
+    this.mensajeExito = resultado.mensaje;
+    // Si quieres redirigir automáticamente:
+    // this.router.navigate(['/products']);
   }
 
   onReset(): void {
     this.enviado = false;
+    this.mensajeExito = '';
+    this.mensajeError = '';
     this.registerForm.reset();
   }
 }

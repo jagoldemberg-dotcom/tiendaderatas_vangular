@@ -9,6 +9,7 @@ import { CartService } from '../../services/cart.service';
 })
 export class ProductsComponent implements OnInit {
   productos: Product[] = [];
+  terminoBusqueda = '';
 
   constructor(
     private productService: ProductService,
@@ -17,6 +18,17 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit(): void {
     this.productos = this.productService.getAll();
+  }
+
+  get productosFiltrados(): Product[] {
+    const termino = this.terminoBusqueda.trim().toLowerCase();
+    if (!termino) {
+      return this.productos;
+    }
+    return this.productos.filter(p =>
+      p.nombre.toLowerCase().includes(termino) ||
+      p.descripcion.toLowerCase().includes(termino)
+    );
   }
 
   addToCart(producto: Product): void {
