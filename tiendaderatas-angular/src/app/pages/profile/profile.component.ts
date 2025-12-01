@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { Usuario } from '../../models/user.model';
 
 @Component({
   selector: 'app-profile',
@@ -10,57 +8,63 @@ import { Usuario } from '../../models/user.model';
 })
 export class ProfileComponent implements OnInit {
   perfilForm!: FormGroup;
-  usuario?: Usuario | null;
-  mensajeExito = '';
+  usuario: any = null;
+  mensajeExito: string | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.usuario = this.authService.getUsuarioActual();
-
-    if (!this.usuario) {
-      this.router.navigate(['/login']);
-      return;
+    // Ajusta la clave según cómo guardes el usuario al hacer login
+    const stored = localStorage.getItem('usuarioActual');
+    if (stored) {
+      this.usuario = JSON.parse(stored);
     }
 
     this.perfilForm = this.fb.group({
-      nombre: [this.usuario.nombre, [Validators.required]],
-      email: [{ value: this.usuario.email, disabled: true }],
-      edad: [this.usuario.edad, [Validators.required, Validators.min(13)]],
-      direccion: [this.usuario.direccion ?? '']
+      nombre: [
+        this.usuario?.nombre || '',
+        [Validators.required, Validators.minLength(3)]
+      ],
+      email: [
+        { value: this.usuario?.email || '', disabled: true },
+        [Validators.required, Validators.email]
+      ],
+      edad: [
+        this.usuario?.edad ?? null,
+        [Validators.required, Validators.min(13)]
+      ],
+      direccion: [this.usuario?.direccion || '']
     });
   }
 
-  get f() {
-    return this.perfilForm?.controls;
-  }
-
   onSubmit(): void {
-    if (!this.perfilForm || this.perfilForm.invalid) {
+    if (this.perfilForm.invalid) {
       this.perfilForm.markAllAsTouched();
       return;
     }
 
-    const { nombre, edad, direccion } = this.perfilForm.getRawValue();
+    // getRawValue incluye también los controles deshabilitados (email)
+    const datosFormulario = this.perfilForm.getRawValue();
 
-    const actualizado = this.authService.actualizarPerfil({
-      nombre,
-      edad,
-      direccion
-    });
+    const usuarioActualizado = {
+      ...this.usuario,
+      ...datosFormulario
+    };
 
-    if (actualizado) {
-      this.usuario = actualizado;
-      this.mensajeExito = 'Perfil actualizado correctamente.';
-    }
+    this.usuario = usuarioActualizado;
+    localStorage.setItem('usuarioActual', JSON.stringify(usuarioActualizado));
+
+    this.mensajeExito = 'Perfil actualizado correctamente.';
+    setTimeout(() => {
+      this.mensajeExito = null;
+    }, 3000);
   }
 
   cerrarSesion(): void {
-    this.authService.cerrarSesion();
+    localStorage.removeItem('usuarioActual');
     this.router.navigate(['/login']);
   }
 }

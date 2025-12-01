@@ -26,7 +26,6 @@
               type="email"
               class="form-control"
               formControlName="email"
-              disabled
             />
             <div class="form-text">
               El correo no se puede modificar.
@@ -59,7 +58,11 @@
           <button class="btn btn-primary" type="submit">
             Guardar cambios
           </button>
-          <button class="btn btn-outline-secondary" type="button" (click)="cerrarSesion()">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="cerrarSesion()"
+          >
             Cerrar sesión
           </button>
         </div>
@@ -71,5 +74,7 @@
     </div>
   </div>
 
-  <a routerLink="/orders" class="btn btn-outline-primary">Ver mis compras</a>
+  <a routerLink="/orders" class="btn btn-outline-primary">
+    Ver mis compras
+  </a>
 </main>

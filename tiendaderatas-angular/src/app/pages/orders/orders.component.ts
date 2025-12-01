@@ -1,19 +1,29 @@
-import { Component } from '@angular/core';
-
-interface Order {
-  id: number;
-  fecha: string;
-  total: number;
-  estado: string;
-}
+import { Component, OnInit } from '@angular/core';
+import { Order } from '../../models/order.model';
+import { OrderService } from '../../services/order.service';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html'
 })
-export class OrdersComponent {
-  pedidos: Order[] = [
-    { id: 1, fecha: '2025-10-01', total: 69980, estado: 'Entregado' },
-    { id: 2, fecha: '2025-10-10', total: 39990, estado: 'Procesando' }
-  ];
+export class OrdersComponent implements OnInit {
+  pedidos: Order[] = [];
+
+  constructor(
+    private orderService: OrderService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const usuario = this.authService.getUsuarioActual();
+    if (!usuario) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.pedidos = this.orderService.obtenerOrdenesPorUsuario(usuario.email);
+  }
 }
