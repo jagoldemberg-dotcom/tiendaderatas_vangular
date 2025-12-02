@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "compodoc": "compodoc -p tsconfig.app.json -d docs",
-    "compodoc:serve": "compodoc -p tsconfig.app.json -d docs -s"
+    "compodoc": "compodoc -p tsconfig.compodoc.json -d docs",
+    "compodoc:serve": "compodoc -p tsconfig.compodoc.json -d docs -s"
   },
   "private": true,
   "dependencies": {
